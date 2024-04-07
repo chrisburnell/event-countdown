@@ -69,21 +69,39 @@ class EventCountdown extends HTMLElement {
 	init() {
 		this.initialized = true
 
+		this.name = this.getAttribute("name")
+		this.start = new Date(this.getAttribute("start"))
+		this.end = this.hasAttribute("end") ? new Date(this.getAttribute("end")) : null
+		this.annual = this.getAttribute("annual") === "true"
+		this.update = this.hasAttribute("update") ? Number(this.getAttribute("update")) : 600
+		this.enableUpdates = this.getAttribute("update") !== "false"
+		this.division = this.getAttribute("division")
+		this.maxDivision = this.getAttribute("max-division")
+
 		this.setString()
 
-		this.startInterval()
-		window.addEventListener("focus", () => {
-			this.windowFocusHandler()
-		})
-		window.addEventListener("blur", () => {
-			this.stopInterval()
-		})
+		if (this.enableUpdates) {
+			this.startInterval()
+			window.addEventListener("focus", () => {
+				this.windowFocusHandler()
+			})
+			window.addEventListener("blur", () => {
+				this.stopInterval()
+			})
+		}
 	}
 
-	getRelativeTime(datetime) {
+	getRelativeTime(datetime, division) {
 		let difference = (datetime.getTime() - Date.now()) / 1000
 
+		if (division) {
+			return EventCountdown.rtf.format(Math.round(difference), division)
+		}
+
 		for (const division of EventCountdown.divisions) {
+			if (this.maxDivision && division.name === this.maxDivision) {
+				return EventCountdown.rtf.format(Math.round(difference), division.name)
+			}
 			if (Math.floor(Math.abs(difference)) < division.amount) {
 				return EventCountdown.rtf.format(Math.round(difference), division.name)
 			}
@@ -94,33 +112,29 @@ class EventCountdown extends HTMLElement {
 	getString() {
 		const nowEpoch = Date.now()
 
-		const name = this.getAttribute("name")
-		let start = new Date(this.getAttribute("start"))
-		let end = this.hasAttribute("end") ? new Date(this.getAttribute("end")) : null
-
 		// If this is an annual event and the start/end point has passed
-		if (this.getAttribute("annual") === "true" && (end || start).getTime() < nowEpoch) {
-			start.setFullYear(start.getFullYear() + 1)
-			if (end) {
-				end.setFullYear(end.getFullYear() + 1)
+		if (this.annual && (this.end || this.start).getTime() < nowEpoch) {
+			this.start.setFullYear(this.start.getFullYear() + 1)
+			if (this.end) {
+				this.end.setFullYear(this.end.getFullYear() + 1)
 			}
 		}
 
-		if (nowEpoch < start.getTime()) {
+		if (nowEpoch < this.start.getTime()) {
 			// Before start point
-			return `${name} is starting <time datetime="${start.toISOString()}" title="${start.toLocaleString()}">${this.getRelativeTime(start)}</time>.`
-		} else if (end) {
+			return `${this.name} is starting <time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>.`
+		} else if (this.end) {
 			// Has end point
-			if (start.getTime() < nowEpoch && nowEpoch < end.getTime()) {
+			if (this.start.getTime() < nowEpoch && nowEpoch < this.end.getTime()) {
 				// Between start and end points
-				return `${name} started <time datetime="${start.toISOString()}" title="${start.toLocaleString()}">${this.getRelativeTime(start)}</time> and ends <time datetime="${end.toISOString()}" title="${end.toLocaleString()}">${this.getRelativeTime(end)}</time>.`
-			} else if (end.getTime() < nowEpoch) {
+				return `${this.name} started <time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time> and ends <time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>.`
+			} else if (this.end.getTime() < nowEpoch) {
 				// Past end point
-				return `${name} ended <time datetime="${end.toISOString()}" title="${end.toLocaleString()}">${this.getRelativeTime(end)}</time>.`
+				return `${this.name} ended <time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>.`
 			}
 		}
 		// Past start point, no end point
-		return `${name} started <time datetime="${start.toISOString()}" title="${start.toLocaleString()}">${this.getRelativeTime(start)}</time>.`
+		return `${this.name} started <time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>.`
 	}
 
 	startInterval() {
@@ -129,7 +143,7 @@ class EventCountdown extends HTMLElement {
 				this.setString()
 				this.startInterval()
 			},
-			10 * 60 * 1000 // every 10 minutes
+			this.update * 1000
 		)
 	}
 

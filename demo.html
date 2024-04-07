@@ -14,32 +14,46 @@
 		</style>
 	</head>
 	<body>
+		<h1><code>&lt;event-countdown&gt;</code></h1>
 		<p>These countdowns will update every 10 minutes and every time you unfocus and focus this window/tab.</p>
 		<h2 id="general">General usage example</h2>
-		<!-- <event-countdown id="first-future" name="This event" start="2024-04-09T00:00:00+14:00"></event-countdown> -->
 		<p>
-			<event-countdown id="first-future" name="This event"></event-countdown>
+			<event-countdown id="general-future" name="This event"></event-countdown>
 		</p>
 		<p>
-			<event-countdown id="first-past" name="This event"></event-countdown>
+			<event-countdown id="general-past" name="This event"></event-countdown>
 		</p>
 		<h2 id="with-end">With end point</h2>
-		<!-- <event-countdown name="That event" start="2024-04-09T00:00:00+14:00" end="2024-04-09T23:59:59-12:00"></event-countdown> -->
 		<p>
-			<event-countdown id="second-future" name="This event"></event-countdown>
+			<event-countdown id="with-end-point-future" name="This event"></event-countdown>
 		</p>
 		<p>
-			<event-countdown id="second-inside" name="This event"></event-countdown>
+			<event-countdown id="with-end-point-inside" name="This event"></event-countdown>
 		</p>
 		<p>
-			<event-countdown id="second-past" name="This event"></event-countdown>
+			<event-countdown id="with-end-point-past" name="This event"></event-countdown>
 		</p>
 		<h2 id="annual">Annual events</h2>
 		<p>
-			<event-countdown id="third-future" name="This event" annual="true"></event-countdown>
+			<event-countdown id="annual-future" name="This event" annual="true"></event-countdown>
 		</p>
 		<p>
-			<event-countdown id="third-past" name="This event" annual="true"></event-countdown>
+			<event-countdown id="annual-past" name="This event" annual="true"></event-countdown>
+		</p>
+		<h2 id="annual">Update frequency</h2>
+		<p>
+			<event-countdown id="update-fast" name="This event" update="1"></event-countdown>
+		</p>
+		<p>
+			<event-countdown id="update-never" name="This event" update="false"></event-countdown>
+		</p>
+		<h2 id="annual">Specific division</h2>
+		<p>
+			<event-countdown id="specific-division" name="This event" division="second"></event-countdown>
+		</p>
+		<h2 id="annual">Maximum division</h2>
+		<p>
+			<event-countdown id="maximum-division" name="This event" max-division="minute"></event-countdown>
 		</p>
 		<style>
 			event-countdown:not(:defined) {
@@ -53,18 +67,25 @@
 			let past = new Date(nowEpoch - (1000 * 15)).toISOString()
 			let pastFurther = new Date(nowEpoch - (1000 * 30)).toISOString()
 
-			document.getElementById("first-future").setAttribute("start", future)
-			document.getElementById("first-past").setAttribute("start", past)
+			document.getElementById("general-future").setAttribute("start", future)
+			document.getElementById("general-past").setAttribute("start", past)
 
-			document.getElementById("second-future").setAttribute("start", future)
-			document.getElementById("second-future").setAttribute("end", futureFurther)
-			document.getElementById("second-inside").setAttribute("start", past)
-			document.getElementById("second-inside").setAttribute("end", future)
-			document.getElementById("second-past").setAttribute("start", pastFurther)
-			document.getElementById("second-past").setAttribute("end", past)
+			document.getElementById("with-end-point-future").setAttribute("start", future)
+			document.getElementById("with-end-point-future").setAttribute("end", futureFurther)
+			document.getElementById("with-end-point-inside").setAttribute("start", past)
+			document.getElementById("with-end-point-inside").setAttribute("end", future)
+			document.getElementById("with-end-point-past").setAttribute("start", pastFurther)
+			document.getElementById("with-end-point-past").setAttribute("end", past)
 
-			document.getElementById("third-future").setAttribute("start", future)
-			document.getElementById("third-past").setAttribute("start", past)
+			document.getElementById("annual-future").setAttribute("start", future)
+			document.getElementById("annual-past").setAttribute("start", past)
+
+			document.getElementById("update-fast").setAttribute("start", future)
+			document.getElementById("update-never").setAttribute("start", future)
+
+			document.getElementById("specific-division").setAttribute("start", new Date(nowEpoch + (1000 * 60 * 60 * 2)).toISOString())
+
+			document.getElementById("maximum-division").setAttribute("start", new Date(nowEpoch + (1000 * 60 * 60 * 2)).toISOString())
 		</script>
 		<script type="module" src="event-countdown.js" defer></script>
 	</body>

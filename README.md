@@ -11,7 +11,7 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
-<event-countdown name="CSS Naked Day" start="2024-04-09T00:00:00+14:00"></event-countdown>
+<event-countdown name="My event" start="2024-04-09T00:00:00+14:00"></event-countdown>
 ```
 
 ### With end point
@@ -19,7 +19,45 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
-<event-countdown name="CSS Naked Day" start="2024-04-09T00:00:00+14:00" end="2024-04-09T23:59:59-12:00"></event-countdown>
+<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" end="2024-04-09T23:59:59-12:00"></event-countdown>
+```
+
+### Annual events
+
+```html
+<script type="module" src="event-countdown.js"></script>
+
+<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" end="2024-04-09T23:59:59-12:00" annual="true"></event-countdown>
+
+<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" annual="true"></event-countdown>
+```
+
+### Update frequency
+
+```html
+<script type="module" src="event-countdown.js"></script>
+
+<!-- Update every 1 second -->
+<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" update="1"></event-countdown>
+
+<!-- Disable updates -->
+<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" update="false"></event-countdown>
+```
+
+### Specific division
+
+```html
+<script type="module" src="event-countdown.js"></script>
+
+<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" division="second"></event-countdown>
+```
+
+### Maximum division
+
+```html
+<script type="module" src="event-countdown.js"></script>
+
+<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" max-division="minute"></event-countdown>
 ```
 
 ## Installation
