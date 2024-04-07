@@ -45,14 +45,21 @@ class EventCountdown extends HTMLElement {
 	]
 
 	connectedCallback() {
-		if (!this.getAttribute("name")) {
+		if (!this.hasAttribute("name")) {
 			console.error(`Missing \`name\` attribute!`, this)
 			return
 		}
 
-		if (!this.getAttribute("start")) {
+		if (!this.hasAttribute("start")) {
 			console.error(`Missing \`start\` attribute!`, this)
 			return
+		}
+
+		if (this.hasAttribute("end")) {
+			if (new Date(this.getAttribute("end")).getTime() < new Date(this.getAttribute("start"))) {
+				console.error(`The \`start\` attribute must represent a date that comes chronologically before the \`end\` attribute!`, this)
+				return
+			}
 		}
 
 		this.interval
