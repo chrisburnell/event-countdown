@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="A Web Component to display an event countdown." />
+		<title>event-countdown Web Component Demo</title>
+		<style>
+			@media (prefers-color-scheme: dark) {
+				:root {
+					color-scheme: dark;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<p>These countdowns will update every 10 minutes and every time you unfocus and focus this window/tab.</p>
+		<h2 id="general">General usage example</h2>
+		<!-- <event-countdown id="first-future" name="This event" start="2024-04-09T00:00:00+14:00"></event-countdown> -->
+		<p>
+			<event-countdown id="first-future" name="This event"></event-countdown>
+		</p>
+		<p>
+			<event-countdown id="first-past" name="This event"></event-countdown>
+		</p>
+		<h2 id="with-end">With end point</h2>
+		<!-- <event-countdown name="That event" start="2024-04-09T00:00:00+14:00" end="2024-04-09T23:59:59-12:00"></event-countdown> -->
+		<p>
+			<event-countdown id="second-future" name="This event"></event-countdown>
+		</p>
+		<p>
+			<event-countdown id="second-inside" name="This event"></event-countdown>
+		</p>
+		<p>
+			<event-countdown id="second-past" name="This event"></event-countdown>
+		</p>
+		<h2 id="annual">Annual events</h2>
+		<p>
+			<event-countdown id="third-future" name="This event" annual="true"></event-countdown>
+		</p>
+		<p>
+			<event-countdown id="third-past" name="This event" annual="true"></event-countdown>
+		</p>
+		<style>
+			event-countdown:not(:defined) {
+				display: none;
+			}
+		</style>
+		<script>
+			let nowEpoch = Date.now()
+			let future = new Date(nowEpoch + (1000 * 15)).toISOString()
+			let futureFurther = new Date(nowEpoch + (1000 * 30)).toISOString()
+			let past = new Date(nowEpoch - (1000 * 15)).toISOString()
+			let pastFurther = new Date(nowEpoch - (1000 * 30)).toISOString()
+
+			document.getElementById("first-future").setAttribute("start", future)
+			document.getElementById("first-past").setAttribute("start", past)
+
+			document.getElementById("second-future").setAttribute("start", future)
+			document.getElementById("second-future").setAttribute("end", futureFurther)
+			document.getElementById("second-inside").setAttribute("start", past)
+			document.getElementById("second-inside").setAttribute("end", future)
+			document.getElementById("second-past").setAttribute("start", pastFurther)
+			document.getElementById("second-past").setAttribute("end", past)
+
+			document.getElementById("third-future").setAttribute("start", future)
+			document.getElementById("third-past").setAttribute("start", past)
+		</script>
+		<script type="module" src="event-countdown.js" defer></script>
+	</body>
+</html>
