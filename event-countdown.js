@@ -119,11 +119,18 @@ class EventCountdown extends HTMLElement {
 	getString() {
 		const nowEpoch = Date.now()
 
-		// If this is an annual event and the start/end point has passed
-		if (this.annual && (this.end || this.start).getTime() < nowEpoch) {
-			this.start.setFullYear(this.start.getFullYear() + 1)
+		// If this is an annual event, set the year to the current year
+		if (this.annual) {
+			this.start.setFullYear(new Date().getFullYear())
 			if (this.end) {
-				this.end.setFullYear(this.end.getFullYear() + 1)
+				this.end.setFullYear(new Date().getFullYear())
+			}
+			// If the end/start have passed, increment the year
+			if ((this.end || this.start).getTime() < nowEpoch) {
+				this.start.setFullYear(this.start.getFullYear() + 1)
+				if (this.end) {
+					this.end.setFullYear(this.end.getFullYear() + 1)
+				}
 			}
 		}
 
