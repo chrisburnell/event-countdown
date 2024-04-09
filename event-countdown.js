@@ -50,12 +50,12 @@ class EventCountdown extends HTMLElement {
 			return
 		}
 
-		if (!this.hasAttribute("start")) {
-			console.error(`Missing \`start\` attribute!`, this)
+		if (!this.hasAttribute("start") && !this.hasAttribute("end")) {
+			console.error(`Missing \`start\` or \`end\` attribute!`, this)
 			return
 		}
 
-		if (this.hasAttribute("end")) {
+		if (this.hasAttribute("start") && this.hasAttribute("end")) {
 			if (new Date(this.getAttribute("end")).getTime() < new Date(this.getAttribute("start"))) {
 				console.error(`The \`start\` attribute must represent a date that comes chronologically before the \`end\` attribute!`, this)
 				return
@@ -77,18 +77,23 @@ class EventCountdown extends HTMLElement {
 		this.initialized = true
 
 		this.name = this.getAttribute("name")
-		this.start = new Date(this.getAttribute("start"))
+		this.start = this.hasAttribute("start") ? new Date(this.getAttribute("start")) : null
 		this.end = this.hasAttribute("end") ? new Date(this.getAttribute("end")) : null
 		this.annual = this.getAttribute("annual") === "true"
 		this.update = this.hasAttribute("update") ? Number(this.getAttribute("update")) : 600
 		this.enableUpdates = this.getAttribute("update") !== "false"
 		this.division = this.getAttribute("division")
 		this.maxDivision = this.getAttribute("max-division")
+		this.startFuture = this.getAttribute("start-future") || " starts "
+		this.startPast = this.getAttribute("start-past") || " started "
+		this.endFuture = this.getAttribute("end-future") || " ends "
+		this.endPast = this.getAttribute("end-past") || " ended "
+		this.conjunction = this.getAttribute("conjunction") || " and "
 
 		this.setString()
 
 		if (this.enableUpdates) {
-			this.startInterval()
+			this.beginInterval()
 			window.addEventListener("focus", () => {
 				this.windowFocusHandler()
 			})
@@ -121,41 +126,47 @@ class EventCountdown extends HTMLElement {
 
 		// If this is an annual event, set the year to the current year
 		if (this.annual) {
-			this.start.setFullYear(new Date().getFullYear())
+			if (this.start) {
+				this.start.setFullYear(new Date().getFullYear())
+			}
 			if (this.end) {
 				this.end.setFullYear(new Date().getFullYear())
 			}
 			// If the end/start have passed, increment the year
 			if ((this.end || this.start).getTime() < nowEpoch) {
-				this.start.setFullYear(this.start.getFullYear() + 1)
+				if (this.start) {
+					this.start.setFullYear(this.start.getFullYear() + 1)
+				}
 				if (this.end) {
 					this.end.setFullYear(this.end.getFullYear() + 1)
 				}
 			}
 		}
 
-		if (nowEpoch < this.start.getTime()) {
-			// Before start point
-			return `${this.name} is starting <time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>.`
-		} else if (this.end) {
-			// Has end point
-			if (this.start.getTime() < nowEpoch && nowEpoch < this.end.getTime()) {
-				// Between start and end points
-				return `${this.name} started <time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time> and ends <time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>.`
-			} else if (this.end.getTime() < nowEpoch) {
-				// Past end point
-				return `${this.name} ended <time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>.`
+		if (this.start && this.end && this.start.getTime() < nowEpoch && nowEpoch < this.end.getTime()) {
+			// Between start and end
+			return `${this.name}${this.startPast}<time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>${(this.conjunction + this.endFuture).replace(/ +/g, " ")}<time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>.`
+		} else if (this.start && !this.end) {
+			if (nowEpoch < this.start.getTime()) {
+				// Before start
+				return `${this.name}${this.startFuture}<time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>.`
 			}
+			// After start
+			return `${this.name}${this.startPast}<time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>.`
 		}
-		// Past start point, no end point
-		return `${this.name} started <time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>.`
+		if (nowEpoch < this.end.getTime()) {
+			// Before end
+			return `${this.name}${this.endFuture}<time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>.`
+		}
+		// After end
+		return `${this.name}${this.endPast}<time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>.`
 	}
 
-	startInterval() {
+	beginInterval() {
 		this.interval = setInterval(
 			() => {
 				this.setString()
-				this.startInterval()
+				this.beginInterval()
 			},
 			this.update * 1000
 		)
@@ -168,7 +179,7 @@ class EventCountdown extends HTMLElement {
 	windowFocusHandler() {
 		this.stopInterval()
 		this.setString()
-		this.startInterval()
+		this.beginInterval()
 	}
 }
 

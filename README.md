@@ -19,6 +19,14 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
+<event-countdown name="My event" end="2024-04-09T23:59:59-12:00"></event-countdown>
+```
+
+### Both start and end points
+
+```html
+<script type="module" src="event-countdown.js"></script>
+
 <event-countdown name="My event" start="2024-04-09T00:00:00+14:00" end="2024-04-09T23:59:59-12:00"></event-countdown>
 ```
 
@@ -27,9 +35,7 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
-<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" end="2024-04-09T23:59:59-12:00" annual="true"></event-countdown>
-
-<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" annual="true"></event-countdown>
+<event-countdown name="My event" start="2024-04-09T00:00:00+14:00"annual="true"></event-countdown>
 ```
 
 ### Update frequency
@@ -37,7 +43,7 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
-<!-- Update every 1 second -->
+<!-- Updates every 1 second -->
 <event-countdown name="My event" start="2024-04-09T00:00:00+14:00" update="1"></event-countdown>
 
 <!-- Disable updates -->
