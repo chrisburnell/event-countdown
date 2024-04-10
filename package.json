@@ -2,6 +2,15 @@
   "name": "@chrisburnell/event-countdown",
   "version": "0.0.5",
   "description": "A Web Component to display an event countdown.",
+  "author": "Chris Burnell <me@chrisburnell.com>",
+  "contributors": [
+    {
+      "name": "Chris Burnell",
+      "email": "me@chrisburnell.com",
+      "url": "https://chrisburnell.com",
+      "mastodon": "@chrisburnell@repc.co"
+    }
+  ],
   "main": "event-countdown.js",
   "scripts": {
     "start": "npx http-server ."
@@ -23,11 +32,6 @@
   },
   "bugs": {
     "url": "https://github.com/chrisburnell/event-countdown/issues"
-  },
-  "author": {
-    "name": "Chris Burnell",
-    "email": "me@chrisburnell.com",
-    "url": "https://chrisburnell.com/"
   },
   "homepage": "https://github.com/chrisburnell/event-countdown#readme"
 }
