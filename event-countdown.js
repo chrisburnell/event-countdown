@@ -57,20 +57,14 @@ class EventCountdown extends HTMLElement {
 
 		if (this.hasAttribute("start") && this.hasAttribute("end")) {
 			if (new Date(this.getAttribute("end")).getTime() < new Date(this.getAttribute("start"))) {
-				console.error(`The \`start\` attribute must represent a date that comes chronologically before the \`end\` attribute!`, this)
+				console.error(`The \`end\` attribute must represent a date that comes chronologically after the \`start\` attribute!`, this)
 				return
 			}
 		}
 
-		this.interval
-
 		if (!this.initialized) {
 			this.init()
 		}
-	}
-
-	setString() {
-		this.innerHTML = this.getString()
 	}
 
 	init() {
@@ -80,25 +74,28 @@ class EventCountdown extends HTMLElement {
 		this.start = this.hasAttribute("start") ? new Date(this.getAttribute("start")) : null
 		this.end = this.hasAttribute("end") ? new Date(this.getAttribute("end")) : null
 		this.annual = this.getAttribute("annual") === "true"
-		this.update = this.hasAttribute("update") ? Number(this.getAttribute("update")) : 600
-		this.enableUpdates = this.getAttribute("update") !== "false"
 		this.division = this.getAttribute("division")
 		this.maxDivision = this.getAttribute("max-division")
+		this.update = this.hasAttribute("update") ? Number(this.getAttribute("update")) : 600 // 10 minutes
+		this.lastUpdate = 0
+		this.enableUpdates = this.getAttribute("update") !== "false"
 		this.startFuture = this.getAttribute("start-future") || " starts "
 		this.startPast = this.getAttribute("start-past") || " started "
 		this.endFuture = this.getAttribute("end-future") || " ends "
 		this.endPast = this.getAttribute("end-past") || " ended "
 		this.conjunction = this.getAttribute("conjunction") || " and "
 
+		this.updateLoop
+
 		this.setString()
 
 		if (this.enableUpdates) {
-			this.beginInterval()
+			this.beginUpdateLoop()
+			window.addEventListener("blur", () => {
+				this.windowBlurHandler()
+			})
 			window.addEventListener("focus", () => {
 				this.windowFocusHandler()
-			})
-			window.addEventListener("blur", () => {
-				this.stopInterval()
 			})
 		}
 	}
@@ -160,24 +157,33 @@ class EventCountdown extends HTMLElement {
 		return `${this.name}${this.endPast}<time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>.`
 	}
 
-	beginInterval() {
-		this.interval = setInterval(
-			() => {
-				this.setString()
-				this.beginInterval()
-			},
-			this.update * 1000
-		)
+	setString() {
+		this.innerHTML = this.getString()
 	}
 
-	stopInterval() {
-		clearInterval(this.interval)
+	beginUpdateLoop() {
+		const updateLoop = (currentTime) => {
+			this.updateLoop = requestAnimationFrame(updateLoop)
+			if (currentTime - this.lastUpdate >= this.update * 1000) {
+				this.setString()
+				this.lastUpdate = currentTime
+			}
+		}
+		this.updateLoop = requestAnimationFrame(updateLoop)
+	}
+
+	stopUpdateLoop() {
+		this.lastUpdate = 0
+		cancelAnimationFrame(this.updateLoop)
+	}
+
+	windowBlurHandler() {
+		this.stopUpdateLoop()
 	}
 
 	windowFocusHandler() {
-		this.stopInterval()
 		this.setString()
-		this.beginInterval()
+		this.beginUpdateLoop()
 	}
 }
 
