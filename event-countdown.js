@@ -5,14 +5,6 @@ class EventCountdown extends HTMLElement {
 		}
 	}
 
-	static locale = document.querySelector("html").getAttribute("lang") || navigator.languages ? navigator.languages[0] : "en"
-
-	static rtf = new Intl.RelativeTimeFormat(EventCountdown.locale, {
-		localeMatcher: "best fit",
-		numeric: "always",
-		style: "long",
-	})
-
 	static divisions = [
 		{
 			amount: 60,
@@ -84,7 +76,6 @@ class EventCountdown extends HTMLElement {
 		this.endFuture = this.getAttribute("end-future") || " ends "
 		this.endPast = this.getAttribute("end-past") || " ended "
 		this.conjunction = this.getAttribute("conjunction") || " and "
-
 		this.updateLoop
 
 		this.setString()
@@ -104,15 +95,15 @@ class EventCountdown extends HTMLElement {
 		let difference = (datetime.getTime() - Date.now()) / 1000
 
 		if (division) {
-			return EventCountdown.rtf.format(Math.round(difference), division)
+			return this.rtf.format(Math.round(difference), division)
 		}
 
 		for (const division of EventCountdown.divisions) {
 			if (this.maxDivision && division.name === this.maxDivision) {
-				return EventCountdown.rtf.format(Math.round(difference), division.name)
+				return this.rtf.format(Math.round(difference), division.name)
 			}
 			if (Math.floor(Math.abs(difference)) < division.amount) {
-				return EventCountdown.rtf.format(Math.round(difference), division.name)
+				return this.rtf.format(Math.round(difference), division.name)
 			}
 			difference /= division.amount
 		}
@@ -184,6 +175,18 @@ class EventCountdown extends HTMLElement {
 	windowFocusHandler() {
 		this.setString()
 		this.beginUpdateLoop()
+	}
+
+	get locale() {
+		return this.getAttribute("lang") || this.closest("[lang]")?.getAttribute("lang") || (navigator.languages ? navigator.languages[0] : "en")
+	}
+
+	get rtf() {
+		return new Intl.RelativeTimeFormat(this.locale, {
+			localeMatcher: "best fit",
+			numeric: "always",
+			style: "long",
+		})
 	}
 }
 
