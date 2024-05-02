@@ -12,42 +12,42 @@
 		<p>These countdowns will update every 10 minutes and every time you unfocus and focus this window/tab.</p>
 		<h2 id="general">General usage example</h2>
 		<p>
-			<event-countdown id="general-future" name="This event"></event-countdown>
+			<event-countdown id="general-future" name="This event">This event starts in <time start datetime="">the future</time>.</event-countdown>
 		</p>
 		<p>
-			<event-countdown id="general-past" name="This event"></event-countdown>
+			<event-countdown id="general-past" name="This event">This event starts in <time start datetime="">the past</time>.</event-countdown>
 		</p>
 		<h2 id="with-end">With end point</h2>
 		<p>
-			<event-countdown id="with-end-point-future" name="This event"></event-countdown>
+			<event-countdown id="with-end-point-future" name="This event">This event starts <time start datetime="">in the future</time> and ends <time end datetime="">in the future</time>.</event-countdown>
 		</p>
 		<p>
-			<event-countdown id="with-end-point-inside" name="This event"></event-countdown>
+			<event-countdown id="with-end-point-inside" name="This event">This event starts <time start datetime="">in the past</time> and ends <time end datetime="">in the future</time>.</event-countdown>
 		</p>
 		<p>
-			<event-countdown id="with-end-point-past" name="This event"></event-countdown>
+			<event-countdown id="with-end-point-past" name="This event">This event starts <time start datetime="">in the past</time> and ends <time end datetime="">in the past</time>.</event-countdown>
 		</p>
 		<h2 id="annual">Annual events</h2>
 		<p>
-			<event-countdown id="annual-future" name="This event" annual="true"></event-countdown>
+			<event-countdown id="annual-future" name="This event" annual="true">This event starts <time start datetime="">in the future</time> annually.</event-countdown>
 		</p>
 		<p>
-			<event-countdown id="annual-past" name="This event" annual="true"></event-countdown>
+			<event-countdown id="annual-past" name="This event" annual="true">This event starts <time start datetime="">in the past</time> annually.</event-countdown>
 		</p>
 		<h2 id="annual">Update frequency</h2>
 		<p>
-			<event-countdown id="update-fast" name="This event" update="1"></event-countdown>
+			<event-countdown id="update-fast" name="This event" update="1">This event starts <time start datetime="">in the future</time>.</event-countdown>
 		</p>
 		<p>
-			<event-countdown id="update-never" name="This event" update="false"></event-countdown>
+			<event-countdown id="update-never" name="This event" update="false">This event starts <time start datetime="">in the future</time>.</event-countdown>
 		</p>
 		<h2 id="annual">Specific division</h2>
 		<p>
-			<event-countdown id="specific-division" name="This event" division="second"></event-countdown>
+			<event-countdown id="specific-division" name="This event" division="second">This event starts <time start datetime="">in the future</time>.</event-countdown>
 		</p>
 		<h2 id="annual">Maximum division</h2>
 		<p>
-			<event-countdown id="maximum-division" name="This event" max-division="minute"></event-countdown>
+			<event-countdown id="maximum-division" name="This event" max-division="minute">This event starts <time start datetime="">in the future</time>.</event-countdown>
 		</p>
 		<style>
 			event-countdown:not(:defined) {
@@ -61,25 +61,25 @@
 			let past = new Date(nowEpoch - (1000 * 15)).toISOString()
 			let pastFurther = new Date(nowEpoch - (1000 * 30)).toISOString()
 
-			document.getElementById("general-future").setAttribute("start", future)
-			document.getElementById("general-past").setAttribute("start", past)
+			document.getElementById("general-future").querySelector("[start]").setAttribute("datetime", future)
+			document.getElementById("general-past").querySelector("[start]").setAttribute("datetime", past)
 
-			document.getElementById("with-end-point-future").setAttribute("start", future)
-			document.getElementById("with-end-point-future").setAttribute("end", futureFurther)
-			document.getElementById("with-end-point-inside").setAttribute("start", past)
-			document.getElementById("with-end-point-inside").setAttribute("end", future)
-			document.getElementById("with-end-point-past").setAttribute("start", pastFurther)
-			document.getElementById("with-end-point-past").setAttribute("end", past)
+			document.getElementById("with-end-point-future").querySelector("[start]").setAttribute("datetime", future)
+			document.getElementById("with-end-point-future").querySelector("[end]").setAttribute("datetime", futureFurther)
+			document.getElementById("with-end-point-inside").querySelector("[start]").setAttribute("datetime", past)
+			document.getElementById("with-end-point-inside").querySelector("[end]").setAttribute("datetime", future)
+			document.getElementById("with-end-point-past").querySelector("[start]").setAttribute("datetime", pastFurther)
+			document.getElementById("with-end-point-past").querySelector("[end]").setAttribute("datetime", past)
 
-			document.getElementById("annual-future").setAttribute("start", future)
-			document.getElementById("annual-past").setAttribute("start", past)
+			document.getElementById("annual-future").querySelector("[start]").setAttribute("datetime", future)
+			document.getElementById("annual-past").querySelector("[start]").setAttribute("datetime", past)
 
-			document.getElementById("update-fast").setAttribute("start", future)
-			document.getElementById("update-never").setAttribute("start", future)
+			document.getElementById("update-fast").querySelector("[start]").setAttribute("datetime", future)
+			document.getElementById("update-never").querySelector("[start]").setAttribute("datetime", future)
 
-			document.getElementById("specific-division").setAttribute("start", new Date(nowEpoch + (1000 * 60 * 60 * 2)).toISOString())
+			document.getElementById("specific-division").querySelector("[start]").setAttribute("datetime", new Date(nowEpoch + (1000 * 60 * 60 * 2)).toISOString())
 
-			document.getElementById("maximum-division").setAttribute("start", new Date(nowEpoch + (1000 * 60 * 60 * 2)).toISOString())
+			document.getElementById("maximum-division").querySelector("[start]").setAttribute("datetime", new Date(nowEpoch + (1000 * 60 * 60 * 2)).toISOString())
 		</script>
 		<script type="module" src="event-countdown.js" defer></script>
 	</body>

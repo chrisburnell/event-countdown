@@ -1,6 +1,6 @@
 {
   "name": "@chrisburnell/event-countdown",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A Web Component to display an event countdown.",
   "author": "Chris Burnell <me@chrisburnell.com>",
   "contributors": [

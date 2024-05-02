@@ -5,66 +5,27 @@ class EventCountdown extends HTMLElement {
 		}
 	}
 
-	static divisions = [
-		{
-			amount: 60,
-			name: "second",
-		},
-		{
-			amount: 60,
-			name: "minute",
-		},
-		{
-			amount: 24,
-			name: "hour",
-		},
-		{
-			amount: 7,
-			name: "day",
-		},
-		{
-			amount: 4.34524,
-			name: "week",
-		},
-		{
-			amount: 12,
-			name: "month",
-		},
-		{
-			amount: Number.POSITIVE_INFINITY,
-			name: "year",
-		},
-	]
-
 	connectedCallback() {
 		if (!this.hasAttribute("name")) {
 			console.error(`Missing \`name\` attribute!`, this)
 			return
 		}
 
-		if (!this.hasAttribute("start") && !this.hasAttribute("end")) {
+		if (!this.getTimeElement("start") && !this.getTimeElement("end")) {
 			console.error(`Missing \`start\` or \`end\` attribute!`, this)
 			return
 		}
 
-		if (this.hasAttribute("start") && this.hasAttribute("end")) {
-			if (new Date(this.getAttribute("end")).getTime() < new Date(this.getAttribute("start"))) {
+		if (this.getTimeElement("start") && this.getTimeElement("end")) {
+			if (new Date(this.getTimeElement("end").getAttribute("datetime")).getTime() < new Date(this.getTimeElement("start").getAttribute("datetime"))) {
 				console.error(`The \`end\` attribute must represent a date that comes chronologically after the \`start\` attribute!`, this)
 				return
 			}
 		}
 
-		if (!this.initialized) {
-			this.init()
-		}
-	}
-
-	init() {
-		this.initialized = true
-
 		this.name = this.getAttribute("name")
-		this.start = this.hasAttribute("start") ? new Date(this.getAttribute("start")) : null
-		this.end = this.hasAttribute("end") ? new Date(this.getAttribute("end")) : null
+		this.start = this.getTimeElement("start") ? new Date(this.getTimeElement("start").getAttribute("datetime")) : null
+		this.end = this.getTimeElement("end") ? new Date(this.getTimeElement("end").getAttribute("datetime")) : null
 		this.annual = this.getAttribute("annual") === "true"
 		this.division = this.getAttribute("division")
 		this.maxDivision = this.getAttribute("max-division")
@@ -176,6 +137,41 @@ class EventCountdown extends HTMLElement {
 		this.setString()
 		this.beginUpdateLoop()
 	}
+
+	getTimeElement(type) {
+		return this.querySelector(`[${type}]`)
+	}
+
+	static divisions = [
+		{
+			amount: 60,
+			name: "second",
+		},
+		{
+			amount: 60,
+			name: "minute",
+		},
+		{
+			amount: 24,
+			name: "hour",
+		},
+		{
+			amount: 7,
+			name: "day",
+		},
+		{
+			amount: 4.34524,
+			name: "week",
+		},
+		{
+			amount: 12,
+			name: "month",
+		},
+		{
+			amount: Number.POSITIVE_INFINITY,
+			name: "year",
+		},
+	]
 
 	get locale() {
 		return this.getAttribute("lang") || this.closest("[lang]")?.getAttribute("lang") || (navigator.languages ? navigator.languages[0] : "en")

@@ -11,7 +11,7 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
-<event-countdown name="My event" start="2024-04-09T00:00:00+14:00"></event-countdown>
+<event-countdown name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
 ```
 
 ### With end point
@@ -19,7 +19,7 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
-<event-countdown name="My event" end="2024-04-09T23:59:59-12:00"></event-countdown>
+<event-countdown name="My event">My event ends on <time end datetime="2024-04-09T23:59:59-12:00">9 April 2024 23:59:59 UTC-12</time>.</event-countdown>
 ```
 
 ### Both start and end points
@@ -27,7 +27,7 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
-<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" end="2024-04-09T23:59:59-12:00"></event-countdown>
+<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" end="2024-04-09T23:59:59-12:00">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time> and ends on <time end datetime="2024-04-09T23:59:59-12:00">9 April 2024 23:59:59 UTC-12</time>.</event-countdown>
 ```
 
 ### Annual events
@@ -35,7 +35,7 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
-<event-countdown name="My event" start="2024-04-09T00:00:00+14:00"annual="true"></event-countdown>
+<event-countdown annual="true" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
 ```
 
 ### Update frequency
@@ -44,10 +44,10 @@ A Web Component to display an event countdown.
 <script type="module" src="event-countdown.js"></script>
 
 <!-- Updates every 1 second -->
-<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" update="1"></event-countdown>
+<event-countdown update="1" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
 
 <!-- Disable updates -->
-<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" update="false"></event-countdown>
+<event-countdown update="false" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
 ```
 
 ### Specific division
@@ -55,7 +55,7 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
-<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" division="second"></event-countdown>
+<event-countdown division="second" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
 ```
 
 ### Maximum division
@@ -63,7 +63,7 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
-<event-countdown name="My event" start="2024-04-09T00:00:00+14:00" max-division="minute"></event-countdown>
+<event-countdown max-division="minute" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
 ```
 
 ## Installation
