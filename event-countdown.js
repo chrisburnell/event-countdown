@@ -23,20 +23,15 @@ class EventCountdown extends HTMLElement {
 			}
 		}
 
-		this.name = this.getAttribute("name")
-		this.start = this.getTimeElement("start") ? new Date(this.getTimeElement("start").getAttribute("datetime")) : null
-		this.end = this.getTimeElement("end") ? new Date(this.getTimeElement("end").getAttribute("datetime")) : null
-		this.annual = this.getAttribute("annual") === "true"
-		this.division = this.getAttribute("division")
-		this.maxDivision = this.getAttribute("max-division")
-		this.update = this.hasAttribute("update") ? Number(this.getAttribute("update")) : 600 // 10 minutes
+		if (this.getTimeElement("start")) {
+			this.setAttribute("start", this.getTimeElement("start").getAttribute("datetime"))
+		}
+
+		if (this.getTimeElement("end")) {
+			this.setAttribute("end", this.getTimeElement("end").getAttribute("datetime"))
+		}
+
 		this.lastUpdate = 0
-		this.enableUpdates = this.getAttribute("update") !== "false"
-		this.startFuture = this.getAttribute("start-future") || " starts "
-		this.startPast = this.getAttribute("start-past") || " started "
-		this.endFuture = this.getAttribute("end-future") || " ends "
-		this.endPast = this.getAttribute("end-past") || " ended "
-		this.conjunction = this.getAttribute("conjunction") || " and "
 		this.updateLoop
 
 		this.setString()
@@ -94,23 +89,24 @@ class EventCountdown extends HTMLElement {
 
 		if (this.start && this.end && this.start.getTime() < nowEpoch && nowEpoch < this.end.getTime()) {
 			// Between start and end
-			return `${this.name}${this.startPast}<time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>${(this.conjunction + this.endFuture).replace(/ +/g, " ")}<time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>.`
+			return `${this.name}${this.startPast}<time start datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>${(this.conjunction + this.endFuture).replace(/ +/g, " ")}<time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>${this.punctuation}`
 		} else if (this.start && nowEpoch < this.start.getTime()) {
 			// Before start
-			return `${this.name}${this.startFuture}<time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>.`
+			return `${this.name}${this.startFuture}<time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>${this.punctuation}`
 		} else if (this.start && !this.end) {
 			// After start
-			return `${this.name}${this.startPast}<time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>.`
+			return `${this.name}${this.startPast}<time datetime="${this.start.toISOString()}" title="${this.start.toLocaleString()}">${this.getRelativeTime(this.start, this.division)}</time>${this.punctuation}`
 		} else if (nowEpoch < this.end.getTime()) {
 			// Before end
-			return `${this.name}${this.endFuture}<time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>.`
+			return `${this.name}${this.endFuture}<time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>${this.punctuation}`
 		}
 		// After end
-		return `${this.name}${this.endPast}<time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>.`
+		return `${this.name}${this.endPast}<time datetime="${this.end.toISOString()}" title="${this.end.toLocaleString()}">${this.getRelativeTime(this.end, this.division)}</time>${this.punctuation}`
 	}
 
 	setString() {
-		this.innerHTML = this.getString()
+		// Removes extra default punctuation at the end
+		this.innerHTML = this.getString().replace(".</time>.", ".</time>")
 	}
 
 	beginUpdateLoop() {
@@ -139,7 +135,7 @@ class EventCountdown extends HTMLElement {
 	}
 
 	getTimeElement(type) {
-		return this.querySelector(`[${type}]`)
+		return this.querySelector(`time[datetime][${type}]`)
 	}
 
 	static divisions = [
@@ -173,6 +169,17 @@ class EventCountdown extends HTMLElement {
 		},
 	]
 
+	static numericFormats = [
+		"always",
+		"auto",
+	]
+
+	static styleFormats = [
+		"long",
+		"short",
+		"narrow",
+	]
+
 	get locale() {
 		return this.getAttribute("lang") || this.closest("[lang]")?.getAttribute("lang") || (navigator.languages ? navigator.languages[0] : "en")
 	}
@@ -180,9 +187,88 @@ class EventCountdown extends HTMLElement {
 	get rtf() {
 		return new Intl.RelativeTimeFormat(this.locale, {
 			localeMatcher: "best fit",
-			numeric: "always",
-			style: "long",
+			numeric: this.formatNumeric,
+			style: this.formatStyle,
 		})
+	}
+
+	get name() {
+		return this.getAttribute("name")
+	}
+
+	get start() {
+		return this.hasAttribute("start") ? new Date(this.getAttribute("start")) : null
+	}
+
+	get end() {
+		return this.hasAttribute("end") ? new Date(this.getAttribute("end")) : null
+	}
+
+	get annual() {
+		return this.hasAttribute("annual") && this.getAttribute("annual") !== "false"
+	}
+
+	get division() {
+		return this.getAttribute("division")
+	}
+
+	get maxDivision() {
+		return this.getAttribute("max-division")
+	}
+
+	get formatNumeric() {
+		// default = "auto"
+		const numericFormat = this.getAttribute("format-numeric")
+		if (this.doubleUp) {
+			return "always"
+		} else if (numericFormat && EventCountdown.numericFormats.includes(numericFormat)) {
+			return numericFormat
+		} else if (this.division || this.maxDivision) {
+			return "always"
+		}
+		return "auto"
+	}
+
+	get formatStyle() {
+		// default = "long"
+		const styleFormat = this.getAttribute("format-style")
+		if (styleFormat && EventCountdown.styleFormats.includes(styleFormat)) {
+			return styleFormat
+		}
+		return "long"
+	}
+
+	get update() {
+		// default = 600 seconds = 10 minutes
+		return this.hasAttribute("update") ? Number(this.getAttribute("update")) : 600
+	}
+
+	get enableUpdates() {
+		return this.getAttribute("update") !== "false"
+	}
+
+	get startFuture() {
+		return this.getAttribute("start-future") ?? " starts "
+	}
+
+	get startPast() {
+		return this.getAttribute("start-past") ?? " started "
+	}
+
+	get endFuture() {
+		return this.getAttribute("end-future") ?? " ends "
+	}
+
+	get endPast() {
+		return this.getAttribute("end-past") ?? " ended "
+	}
+
+	get conjunction() {
+		return this.getAttribute("conjunction") ?? " and "
+	}
+
+	get punctuation() {
+		return this.getAttribute("punctuation") ?? "."
 	}
 }
 

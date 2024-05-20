@@ -35,6 +35,7 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
+<!-- Roll over to next year if event has passed -->
 <event-countdown annual="true" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
 ```
 
@@ -55,6 +56,7 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
+<!-- Always format using seconds -->
 <event-countdown division="second" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
 ```
 
@@ -63,7 +65,35 @@ A Web Component to display an event countdown.
 ```html
 <script type="module" src="event-countdown.js"></script>
 
+<!-- Format using seconds up to minutes -->
 <event-countdown max-division="minute" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
+```
+
+### Numeric format
+
+```html
+<script type="module" src="event-countdown.js"></script>
+
+<!-- Automatically choose when to use numbers vs. words in formatting -->
+<event-countdown format-numeric="auto" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
+
+<!-- Always use numbers in time formatting -->
+<event-countdown format-numeric="always" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
+```
+
+### Style format
+
+```html
+<script type="module" src="event-countdown.js"></script>
+
+<!-- Long formatting (e.g. 1 second) -->
+<event-countdown format-style="long" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
+
+<!-- Short formatting (e.g. 1 sec.) -->
+<event-countdown format-style="short" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
+
+<!-- Narrow formatting (e.g. 1s) -->
+<event-countdown format-style="narrow" name="My event">My event starts on <time start datetime="2024-04-09T00:00:00+14:00">9 April 2024 00:00:00 UTC+14</time>.</event-countdown>
 ```
 
 ## Installation

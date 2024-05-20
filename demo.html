@@ -12,10 +12,10 @@
 		<p>These countdowns will update every 10 minutes and every time you unfocus and focus this window/tab.</p>
 		<h2 id="general">General usage example</h2>
 		<p>
-			<event-countdown id="general-future" name="This event">This event starts in <time start datetime="">the future</time>.</event-countdown>
+			<event-countdown class="general-future" name="This event">This event starts in <time start datetime="">the future</time>.</event-countdown>
 		</p>
 		<p>
-			<event-countdown id="general-past" name="This event">This event starts in <time start datetime="">the past</time>.</event-countdown>
+			<event-countdown class="general-past" name="This event">This event starts in <time start datetime="">the past</time>.</event-countdown>
 		</p>
 		<h2 id="with-end">With end point</h2>
 		<p>
@@ -49,6 +49,23 @@
 		<p>
 			<event-countdown id="maximum-division" name="This event" max-division="minute">This event starts <time start datetime="">in the future</time>.</event-countdown>
 		</p>
+		<h2 id="numeric-format">Numeric format</h2>
+		<p>
+			<event-countdown class="general-now" name="This event" format-numeric="always" update="false">This event starts in <time start datetime="">the future</time>.</event-countdown>
+		</p>
+		<p>
+			<event-countdown class="general-now" name="This event" format-numeric="auto" update="false">This event starts in <time start datetime="">the future</time>.</event-countdown>
+		</p>
+		<h2 id="style-format">Style format</h2>
+		<p>
+			<event-countdown class="general-future" name="This event" format-style="long" update="false">This event starts in <time start datetime="">the future</time>.</event-countdown>
+		</p>
+		<p>
+			<event-countdown class="general-future" name="This event" format-style="short" update="false">This event starts in <time start datetime="">the future</time>.</event-countdown>
+		</p>
+		<p>
+			<event-countdown class="general-future" name="This event" format-style="narrow" update="false">This event starts in <time start datetime="">the future</time>.</event-countdown>
+		</p>
 		<style>
 			event-countdown:not(:defined) {
 				display: none;
@@ -61,8 +78,15 @@
 			let past = new Date(nowEpoch - (1000 * 15)).toISOString()
 			let pastFurther = new Date(nowEpoch - (1000 * 30)).toISOString()
 
-			document.getElementById("general-future").querySelector("[start]").setAttribute("datetime", future)
-			document.getElementById("general-past").querySelector("[start]").setAttribute("datetime", past)
+			document.querySelectorAll(".general-future").forEach((element) => {
+				element.querySelector("[start]").setAttribute("datetime", future)
+			})
+			document.querySelectorAll(".general-past").forEach((element) => {
+				element.querySelector("[start]").setAttribute("datetime", past)
+			})
+			document.querySelectorAll(".general-now").forEach((element) => {
+				element.querySelector("[start]").setAttribute("datetime", new Date(nowEpoch).toISOString())
+			})
 
 			document.getElementById("with-end-point-future").querySelector("[start]").setAttribute("datetime", future)
 			document.getElementById("with-end-point-future").querySelector("[end]").setAttribute("datetime", futureFurther)
