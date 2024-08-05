@@ -1,7 +1,16 @@
 {
   "name": "@chrisburnell/event-countdown",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Web Component to display an event countdown.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrisburnell/event-countdown.git"
+  },
+  "homepage": "https://github.com/chrisburnell/event-countdown#readme",
+  "bugs": {
+    "url": "https://github.com/chrisburnell/event-countdown/issues"
+  },
   "author": "Chris Burnell <me@chrisburnell.com>",
   "contributors": [
     {
@@ -11,27 +20,18 @@
       "mastodon": "@chrisburnell@repc.co"
     }
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "event-countdown.js",
   "scripts": {
     "start": "npx http-server ."
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/chrisburnell/event-countdown.git"
-  },
   "keywords": [
-    "web",
     "component",
     "components",
-    "web components",
-    "custom elements"
-  ],
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "bugs": {
-    "url": "https://github.com/chrisburnell/event-countdown/issues"
-  },
-  "homepage": "https://github.com/chrisburnell/event-countdown#readme"
+    "custom elements",
+    "web",
+    "web components"
+  ]
 }

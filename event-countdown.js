@@ -38,13 +38,18 @@ class EventCountdown extends HTMLElement {
 
 		if (this.enableUpdates) {
 			this.beginUpdateLoop()
+			const { signal } = this.controller = new AbortController()
 			window.addEventListener("blur", () => {
 				this.windowBlurHandler()
-			})
+			}, { signal })
 			window.addEventListener("focus", () => {
 				this.windowFocusHandler()
-			})
+			}, { signal })
 		}
+	}
+
+	disconnectedCallback() {
+		this.controller.abort()
 	}
 
 	getRelativeTime(datetime, division) {
